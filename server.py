@@ -5,7 +5,7 @@ LINE = "=" * 78
 
 def start_server():
     # Setup the listener
-    server_ip = "0.0.0.0" 
+    server_ip = "192.168.220.128" 
     server_port = 8080
     
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -13,8 +13,6 @@ def start_server():
     server.bind((server_ip, server_port))
     server.listen(1)
     
-    # 1. Print the Title and Initial Border
-    print("\n\t\tCheck Admin Privileges\n")
     print(LINE)
     print(f"[+] Listening for income TCP connection on port {server_port}")
     
